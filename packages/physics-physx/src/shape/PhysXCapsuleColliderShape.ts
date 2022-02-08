@@ -2,7 +2,8 @@ import { PhysXPhysicsDebug } from "../PhysXPhysicsDebug";
 import { ICapsuleColliderShape } from "@oasis-engine/design";
 import { PhysXColliderShape } from "./PhysXColliderShape";
 import { PhysXPhysicsMaterial } from "../PhysXPhysicsMaterial";
-import { Vector3 } from "oasis-engine";
+import { BlinnPhongMaterial, Entity, MeshRenderer, Vector3 } from "oasis-engine";
+import { WireFramePrimitive } from "@yangfengzzz/physics-gizmo";
 
 /**
  * Capsule collider shape in PhysX.
@@ -11,6 +12,7 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
   private _radius: number;
   private _halfHeight: number;
   private _upAxis: ColliderShapeUpAxis = ColliderShapeUpAxis.Y;
+  private _renderer: MeshRenderer;
 
   /**
    * Init PhysXCollider and alloc PhysX objects.
@@ -31,6 +33,13 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
     this.setUniqueID(uniqueID);
   }
 
+  setEntity(value: Entity) {
+    super.setEntity(value);
+    this._renderer = this._entity.addComponent(MeshRenderer);
+    this._renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
+    this._syncCapsuleGeometry();
+  }
+
   /**
    * {@inheritDoc ICapsuleColliderShape.setRadius }
    */
@@ -48,6 +57,7 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
         break;
     }
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncCapsuleGeometry();
   }
 
   /**
@@ -67,6 +77,7 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
         break;
     }
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncCapsuleGeometry();
   }
 
   /**
@@ -107,6 +118,19 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
         break;
     }
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncCapsuleGeometry();
+  }
+
+  private _syncCapsuleGeometry() {
+    if (this._entity) {
+      const radius = this._pxGeometry.radius;
+      const halfHeight = this._pxGeometry.halfHeight;
+      this._renderer.mesh = WireFramePrimitive.createCapsuleWireFrame(
+        PhysXPhysicsDebug._engine,
+        radius,
+        halfHeight * 2
+      );
+    }
   }
 }
 

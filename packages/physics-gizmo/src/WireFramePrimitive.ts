@@ -110,7 +110,7 @@ export class WireFramePrimitive {
     return mesh;
   }
 
-  private static createCapsuleWireFrame(engine: Engine, radius: number, height: number): ModelMesh {
+  static createCapsuleWireFrame(engine: Engine, radius: number, height: number): ModelMesh {
     const mesh = new ModelMesh(engine);
 
     const vertexCount = 40;

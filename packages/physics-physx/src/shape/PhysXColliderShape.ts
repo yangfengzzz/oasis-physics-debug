@@ -63,7 +63,6 @@ export abstract class PhysXColliderShape implements IColliderShape {
   getLocalTransform(transform: Transform): void {
     const trans = this._pxShape.getLocalPose();
     transform.setPosition(trans.translation.x, trans.translation.y, trans.translation.z);
-    transform.setRotationQuaternion(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
   }
 
   /**

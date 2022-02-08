@@ -38,8 +38,7 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     const renderer = this._entity.addComponent(MeshRenderer);
     renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
     renderer.mesh = WireFramePrimitive.createCuboidWireFrame(PhysXPhysicsDebug._engine, 1, 1, 1);
-    const halfExtents = this._pxGeometry.halfExtents;
-    this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
+    this._syncBoxGeometry();
   }
 
   /**
@@ -50,10 +49,7 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     Vector3.multiply(this._halfSize, this._scale, PhysXBoxColliderShape._tempHalfExtents);
     this._pxGeometry.halfExtents = PhysXBoxColliderShape._tempHalfExtents;
     this._pxShape.setGeometry(this._pxGeometry);
-    if (this._entity) {
-      const halfExtents = this._pxGeometry.halfExtents;
-      this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
-    }
+    this._syncBoxGeometry();
   }
 
   /**
@@ -64,6 +60,10 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     Vector3.multiply(this._halfSize, this._scale, PhysXBoxColliderShape._tempHalfExtents);
     this._pxGeometry.halfExtents = PhysXBoxColliderShape._tempHalfExtents;
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncBoxGeometry();
+  }
+
+  private _syncBoxGeometry() {
     if (this._entity) {
       const halfExtents = this._pxGeometry.halfExtents;
       this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);

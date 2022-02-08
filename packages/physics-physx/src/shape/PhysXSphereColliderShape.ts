@@ -2,7 +2,8 @@ import { PhysXPhysicsDebug } from "../PhysXPhysicsDebug";
 import { ISphereColliderShape } from "@oasis-engine/design";
 import { PhysXColliderShape } from "./PhysXColliderShape";
 import { PhysXPhysicsMaterial } from "../PhysXPhysicsMaterial";
-import { Vector3 } from "oasis-engine";
+import { BlinnPhongMaterial, Entity, MeshRenderer, Vector3 } from "oasis-engine";
+import { WireFramePrimitive } from "@yangfengzzz/physics-gizmo";
 
 /**
  * Sphere collider shape in PhysX.
@@ -28,6 +29,14 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
     this.setUniqueID(uniqueID);
   }
 
+  setEntity(value: Entity) {
+    super.setEntity(value);
+    const renderer = this._entity.addComponent(MeshRenderer);
+    renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
+    renderer.mesh = WireFramePrimitive.createSphereWireFrame(PhysXPhysicsDebug._engine, 1);
+    this._syncSphereGeometry();
+  }
+
   /**
    * {@inheritDoc ISphereColliderShape.setRadius }
    */
@@ -35,6 +44,7 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
     this._radius = value;
     this._pxGeometry.radius = value * this._maxScale;
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncSphereGeometry();
   }
 
   /**
@@ -44,5 +54,13 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
     this._maxScale = Math.max(scale.x, Math.max(scale.x, scale.y));
     this._pxGeometry.radius = this._radius * this._maxScale;
     this._pxShape.setGeometry(this._pxGeometry);
+    this._syncSphereGeometry();
+  }
+
+  private _syncSphereGeometry() {
+    if (this._entity) {
+      const radius = this._pxGeometry.radius;
+      this._entity.transform.setScale(radius, radius, radius);
+    }
   }
 }
