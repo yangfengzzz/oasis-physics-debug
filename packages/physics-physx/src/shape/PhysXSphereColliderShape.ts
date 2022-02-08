@@ -55,6 +55,8 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
     this._pxGeometry.radius = this._radius * this._maxScale;
     this._pxShape.setGeometry(this._pxGeometry);
     // scale offset
+    const trans = this._pxShape.getLocalPose();
+    this._position.setValue(trans.translation.x, trans.translation.y, trans.translation.z);
     this._position.multiply(scale);
     this.setPosition(this._position);
 
