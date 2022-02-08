@@ -1,6 +1,6 @@
 {
   "name": "@yangfengzzz/physics-gizmo",
-  "version": "0.6.9",
+  "version": "0.6.11",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/module.js",

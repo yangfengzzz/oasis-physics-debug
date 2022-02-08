@@ -71,9 +71,9 @@ export class PhysXPhysicsDebug {
       }
 
       if (runtimeMode == PhysXRuntimeMode.JavaScript) {
-        script.src = "https://gw.alipayobjects.com/os/lib/yangfengzzz/physics-physx/0.6.10/dist/physx.release.js";
+        script.src = "https://gw.alipayobjects.com/os/lib/yangfengzzz/physics-physx-debug/0.6.11/dist/physx.release.js";
       } else if (runtimeMode == PhysXRuntimeMode.WebAssembly) {
-        script.src = "https://gw.alipayobjects.com/os/lib/yangfengzzz/physics-physx/0.6.10/dist/physx.release.js";
+        script.src = "https://gw.alipayobjects.com/os/lib/yangfengzzz/physics-physx-debug/0.6.11/dist/physx.release.js";
       }
     });
 
