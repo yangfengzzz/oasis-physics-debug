@@ -103,6 +103,15 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
    * {@inheritDoc IColliderShape.setWorldScale }
    */
   setWorldScale(scale: Vector3): void {
+    // scale offset
+    const position = this._position;
+    PhysXColliderShape.transform.translation.setValue(
+      (position.x * scale.x) / this._scale.x,
+      (position.y * scale.y) / this._scale.y,
+      (position.z * scale.z) / this._scale.z
+    );
+    this._setLocalPose();
+
     switch (this._upAxis) {
       case ColliderShapeUpAxis.X:
         this._pxGeometry.radius = this._radius * Math.max(scale.y, scale.z);
@@ -118,12 +127,6 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
         break;
     }
     this._pxShape.setGeometry(this._pxGeometry);
-    // scale offset
-    const trans = this._pxShape.getLocalPose();
-    this._position.setValue(trans.translation.x, trans.translation.y, trans.translation.z);
-    this._position.multiply(scale);
-    this.setPosition(this._position);
-
     this._syncCapsuleGeometry();
   }
 

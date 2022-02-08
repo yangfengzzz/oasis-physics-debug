@@ -38,9 +38,12 @@ export class PhysXPlaneColliderShape extends PhysXColliderShape implements IPlan
    */
   setWorldScale(scale: Vector3): void {
     // scale offset
-    const trans = this._pxShape.getLocalPose();
-    this._position.setValue(trans.translation.x, trans.translation.y, trans.translation.z);
-    this._position.multiply(scale);
-    this.setPosition(this._position);
+    const position = this._position;
+    PhysXColliderShape.transform.translation.setValue(
+      (position.x * scale.x) / this._scale.x,
+      (position.y * scale.y) / this._scale.y,
+      (position.z * scale.z) / this._scale.z
+    );
+    this._setLocalPose();
   }
 }

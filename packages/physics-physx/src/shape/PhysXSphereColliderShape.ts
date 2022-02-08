@@ -51,15 +51,18 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
    * {@inheritDoc IColliderShape.setWorldScale }
    */
   setWorldScale(scale: Vector3): void {
+    // scale offset
+    const position = this._position;
+    PhysXColliderShape.transform.translation.setValue(
+      (position.x * scale.x) / this._scale.x,
+      (position.y * scale.y) / this._scale.y,
+      (position.z * scale.z) / this._scale.z
+    );
+    this._setLocalPose();
+
     this._maxScale = Math.max(scale.x, Math.max(scale.x, scale.y));
     this._pxGeometry.radius = this._radius * this._maxScale;
     this._pxShape.setGeometry(this._pxGeometry);
-    // scale offset
-    const trans = this._pxShape.getLocalPose();
-    this._position.setValue(trans.translation.x, trans.translation.y, trans.translation.z);
-    this._position.multiply(scale);
-    this.setPosition(this._position);
-
     this._syncSphereGeometry();
   }
 
