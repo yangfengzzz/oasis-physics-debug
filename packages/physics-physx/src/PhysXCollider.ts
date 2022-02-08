@@ -1,6 +1,7 @@
 import { ICollider } from "@oasis-engine/design";
-import { Quaternion, Vector3 } from "oasis-engine";
+import { Entity, Quaternion, Vector3 } from "oasis-engine";
 import { PhysXColliderShape } from "./shape/PhysXColliderShape";
+import { PhysXPhysicsDebug } from "./PhysXPhysicsDebug";
 
 /**
  * Abstract class of physical collider.
@@ -14,10 +15,17 @@ export abstract class PhysXCollider implements ICollider {
   /** @internal */
   _pxActor: any;
 
+  _entity: Entity;
+
+  constructor() {
+    this._entity = PhysXPhysicsDebug._rootEntity.createChild();
+  }
+
   /**
    * {@inheritDoc ICollider.addShape }
    */
   addShape(shape: PhysXColliderShape): void {
+    shape.setEntity(this._entity);
     this._pxActor.attachShape(shape._pxShape);
   }
 
@@ -25,6 +33,7 @@ export abstract class PhysXCollider implements ICollider {
    * {@inheritDoc ICollider.removeShape }
    */
   removeShape(shape: PhysXColliderShape): void {
+    shape.removeEntity(this._entity);
     this._pxActor.detachShape(shape._pxShape, true);
   }
 
@@ -33,6 +42,8 @@ export abstract class PhysXCollider implements ICollider {
    */
   setWorldTransform(position: Vector3, rotation: Quaternion): void {
     this._pxActor.setGlobalPose(this._transform(position, rotation), true);
+
+    this.getWorldTransform(this._entity.transform.position, this._entity.transform.rotationQuaternion);
   }
 
   /**
@@ -42,6 +53,9 @@ export abstract class PhysXCollider implements ICollider {
     const transform = this._pxActor.getGlobalPose();
     outPosition.setValue(transform.translation.x, transform.translation.y, transform.translation.z);
     outRotation.setValue(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+
+    this._entity.transform.position = outPosition;
+    this._entity.transform.rotationQuaternion = outRotation;
   }
 
   /**

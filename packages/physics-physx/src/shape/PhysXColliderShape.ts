@@ -1,5 +1,5 @@
 import { IColliderShape } from "@oasis-engine/design";
-import { Quaternion, Vector3 } from "oasis-engine";
+import { Entity, Quaternion, Transform, Vector3 } from "oasis-engine";
 import { PhysXPhysicsMaterial } from "../PhysXPhysicsMaterial";
 import { PhysXPhysicsDebug } from "../PhysXPhysicsDebug";
 
@@ -27,6 +27,7 @@ export abstract class PhysXColliderShape implements IColliderShape {
   protected _position: Vector3 = new Vector3();
   protected _rotation: Quaternion = new Quaternion(0, 0, PhysXColliderShape.halfSqrt, PhysXColliderShape.halfSqrt);
   protected _scale: Vector3 = new Vector3(1, 1, 1);
+  protected _entity: Entity;
 
   private _shapeFlags: ShapeFlag = ShapeFlag.SCENE_QUERY_SHAPE | ShapeFlag.SIMULATION_SHAPE;
   private _pxMaterials: any[] = new Array(1);
@@ -38,12 +39,31 @@ export abstract class PhysXColliderShape implements IColliderShape {
   /** @internal */
   _id: number;
 
+  setEntity(value: Entity) {
+    this._entity = value.createChild();
+    this.getLocalTransform(this._entity.transform);
+  }
+
+  removeEntity(value: Entity) {
+    value.removeChild(this._entity);
+    this._entity = null;
+  }
+
   /**
    * {@inheritDoc IColliderShape.setPosition }
    */
   setPosition(value: Vector3): void {
     value.cloneTo(this._position);
     this._setLocalPose();
+  }
+
+  /**
+   * {@inheritDoc ICollider.getWorldTransform }
+   */
+  getLocalTransform(transform: Transform): void {
+    const trans = this._pxShape.getLocalPose();
+    transform.setPosition(trans.translation.x, trans.translation.y, trans.translation.z);
+    transform.setRotationQuaternion(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
   }
 
   /**
@@ -97,6 +117,9 @@ export abstract class PhysXColliderShape implements IColliderShape {
     transform.translation = this._position;
     transform.rotation = this._rotation;
     this._pxShape.setLocalPose(PhysXColliderShape.transform);
+    if (this._entity) {
+      this.getLocalTransform(this._entity.transform);
+    }
   }
 
   protected _allocShape(material: PhysXPhysicsMaterial): void {

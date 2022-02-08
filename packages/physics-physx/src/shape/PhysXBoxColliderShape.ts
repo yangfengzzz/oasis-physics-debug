@@ -1,8 +1,9 @@
 import { IBoxColliderShape } from "@oasis-engine/design";
-import { BlinnPhongMaterial, MeshRenderer, PrimitiveMesh, Vector3 } from "oasis-engine";
+import { BlinnPhongMaterial, Entity, MeshRenderer, Vector3 } from "oasis-engine";
 import { PhysXPhysicsDebug } from "../PhysXPhysicsDebug";
 import { PhysXColliderShape } from "./PhysXColliderShape";
 import { PhysXPhysicsMaterial } from "../PhysXPhysicsMaterial";
+import { WireFramePrimitive } from "@yangfengzzz/physics-gizmo";
 
 /**
  * Box collider shape in PhysX.
@@ -11,7 +12,6 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
   private static _tempHalfExtents = new Vector3();
   private _halfSize: Vector3 = new Vector3();
 
-  private _renderer: MeshRenderer;
   /**
    * Init Box Shape and alloc PhysX objects.
    * @param uniqueID - UniqueID mark Shape.
@@ -20,10 +20,6 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
    */
   constructor(uniqueID: number, size: Vector3, material: PhysXPhysicsMaterial) {
     super();
-
-    this._renderer = PhysXPhysicsDebug._rootEntity.addComponent(MeshRenderer);
-    this._renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
-    this._renderer.mesh = PrimitiveMesh.createCapsule(PhysXPhysicsDebug._engine, 1, 10);
 
     this._halfSize.setValue(size.x * 0.5, size.y * 0.5, size.z * 0.5);
 
@@ -37,6 +33,15 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     this.setUniqueID(uniqueID);
   }
 
+  setEntity(value: Entity) {
+    super.setEntity(value);
+    const renderer = this._entity.addComponent(MeshRenderer);
+    renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
+    renderer.mesh = WireFramePrimitive.createCuboidWireFrame(PhysXPhysicsDebug._engine, 1, 1, 1);
+    const halfExtents = this._pxGeometry.halfExtents;
+    this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
+  }
+
   /**
    * {@inheritDoc IBoxColliderShape.setSize }
    */
@@ -45,6 +50,10 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     Vector3.multiply(this._halfSize, this._scale, PhysXBoxColliderShape._tempHalfExtents);
     this._pxGeometry.halfExtents = PhysXBoxColliderShape._tempHalfExtents;
     this._pxShape.setGeometry(this._pxGeometry);
+    if (this._entity) {
+      const halfExtents = this._pxGeometry.halfExtents;
+      this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
+    }
   }
 
   /**
@@ -55,5 +64,9 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     Vector3.multiply(this._halfSize, this._scale, PhysXBoxColliderShape._tempHalfExtents);
     this._pxGeometry.halfExtents = PhysXBoxColliderShape._tempHalfExtents;
     this._pxShape.setGeometry(this._pxGeometry);
+    if (this._entity) {
+      const halfExtents = this._pxGeometry.halfExtents;
+      this._entity.transform.setScale(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
+    }
   }
 }
