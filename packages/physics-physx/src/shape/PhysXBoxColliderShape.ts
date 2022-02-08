@@ -1,5 +1,5 @@
 import { IBoxColliderShape } from "@oasis-engine/design";
-import { Vector3 } from "oasis-engine";
+import { BlinnPhongMaterial, MeshRenderer, PrimitiveMesh, Vector3 } from "oasis-engine";
 import { PhysXPhysicsDebug } from "../PhysXPhysicsDebug";
 import { PhysXColliderShape } from "./PhysXColliderShape";
 import { PhysXPhysicsMaterial } from "../PhysXPhysicsMaterial";
@@ -11,6 +11,7 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
   private static _tempHalfExtents = new Vector3();
   private _halfSize: Vector3 = new Vector3();
 
+  private _renderer: MeshRenderer;
   /**
    * Init Box Shape and alloc PhysX objects.
    * @param uniqueID - UniqueID mark Shape.
@@ -19,6 +20,10 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
    */
   constructor(uniqueID: number, size: Vector3, material: PhysXPhysicsMaterial) {
     super();
+
+    this._renderer = PhysXPhysicsDebug._rootEntity.addComponent(MeshRenderer);
+    this._renderer.setMaterial(new BlinnPhongMaterial(PhysXPhysicsDebug._engine));
+    this._renderer.mesh = PrimitiveMesh.createCapsule(PhysXPhysicsDebug._engine, 1, 10);
 
     this._halfSize.setValue(size.x * 0.5, size.y * 0.5, size.z * 0.5);
 

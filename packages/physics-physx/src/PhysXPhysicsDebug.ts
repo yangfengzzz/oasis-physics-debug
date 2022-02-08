@@ -17,7 +17,7 @@ import { PhysXCapsuleColliderShape } from "./shape/PhysXCapsuleColliderShape";
 import { PhysXDynamicCollider } from "./PhysXDynamicCollider";
 import { PhysXStaticCollider } from "./PhysXStaticCollider";
 import { StaticInterfaceImplement } from "./StaticInterfaceImplement";
-import { Quaternion, Vector3 } from "oasis-engine";
+import { Entity, Quaternion, Vector3, WebGLEngine } from "oasis-engine";
 import { PhysXPlaneColliderShape } from "./shape/PhysXPlaneColliderShape";
 import { PhysXRuntimeMode } from "./enum/PhysXRuntimeMode";
 
@@ -26,10 +26,19 @@ import { PhysXRuntimeMode } from "./enum/PhysXRuntimeMode";
  */
 @StaticInterfaceImplement<IPhysics>()
 export class PhysXPhysicsDebug {
+  static _rootEntity: Entity;
+  static _engine: WebGLEngine;
+
   /** @internal PhysX wasm object */
   static _physX: any;
   /** @internal Physx physics object */
   static _pxPhysics: any;
+
+  static setEngine(engine: WebGLEngine) {
+    this._engine = engine;
+    const scene = this._engine.sceneManager.activeScene;
+    this._rootEntity = scene.createRootEntity();
+  }
 
   /**
    * Initialize PhysXPhysics.
