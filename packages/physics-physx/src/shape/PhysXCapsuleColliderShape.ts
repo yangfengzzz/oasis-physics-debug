@@ -118,6 +118,10 @@ export class PhysXCapsuleColliderShape extends PhysXColliderShape implements ICa
         break;
     }
     this._pxShape.setGeometry(this._pxGeometry);
+    // scale offset
+    this._position.multiply(scale);
+    this.setPosition(this._position);
+
     this._syncCapsuleGeometry();
   }
 

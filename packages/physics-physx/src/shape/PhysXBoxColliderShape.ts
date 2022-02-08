@@ -60,6 +60,10 @@ export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxCol
     Vector3.multiply(this._halfSize, this._scale, PhysXBoxColliderShape._tempHalfExtents);
     this._pxGeometry.halfExtents = PhysXBoxColliderShape._tempHalfExtents;
     this._pxShape.setGeometry(this._pxGeometry);
+    // scale offset
+    this._position.multiply(scale);
+    this.setPosition(this._position);
+
     this._syncBoxGeometry();
   }
 
