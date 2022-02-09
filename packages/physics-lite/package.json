@@ -1,6 +1,6 @@
 {
   "name": "@yangfengzzz/physics-lite-debug",
-  "version": "0.6.10",
+  "version": "0.6.11",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/module.js",
