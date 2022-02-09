@@ -6,7 +6,7 @@ import { LiteBoxColliderShape } from "./shape/LiteBoxColliderShape";
 import { LiteSphereColliderShape } from "./shape/LiteSphereColliderShape";
 import { LiteColliderShape } from "./shape/LiteColliderShape";
 import { DisorderedArray } from "./DisorderedArray";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "./LitePhysicsDebug";
 
 /**
  * A manager is a collection of bodies and constraints which can interact.
@@ -49,7 +49,7 @@ export class LitePhysicsManager implements IPhysicsManager {
     this._onTriggerExit = onTriggerExit;
     this._onTriggerStay = onTriggerStay;
 
-    this._physxPhysicsManager = PhysXPhysicsDebug.createPhysicsManager(
+    this._physxPhysicsManager = LitePhysicsDebug._physxPhysicsDebug.createPhysicsManager(
       onContactEnter,
       onContactExit,
       onContactStay,

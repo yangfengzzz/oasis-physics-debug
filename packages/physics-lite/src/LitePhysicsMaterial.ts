@@ -1,5 +1,5 @@
 import { IPhysicsMaterial } from "@oasis-engine/design";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "./LitePhysicsDebug";
 
 /**
  * Physics material describes how to handle colliding objects (friction, bounciness).
@@ -14,7 +14,7 @@ export class LitePhysicsMaterial implements IPhysicsMaterial {
     frictionCombine: number,
     bounceCombine: number
   ) {
-    this._physxMaterial = PhysXPhysicsDebug.createPhysicsMaterial(
+    this._physxMaterial = LitePhysicsDebug._physxPhysicsDebug.createPhysicsMaterial(
       staticFriction,
       dynamicFriction,
       bounciness,

@@ -1,7 +1,7 @@
 import { IStaticCollider } from "@oasis-engine/design";
 import { LiteCollider } from "./LiteCollider";
 import { Quaternion, Vector3 } from "oasis-engine";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "./LitePhysicsDebug";
 
 /**
  * A static collider component that will not move.
@@ -15,7 +15,7 @@ export class LiteStaticCollider extends LiteCollider implements IStaticCollider 
    */
   constructor(position: Vector3, rotation: Quaternion) {
     super();
-    this._physxCollider = PhysXPhysicsDebug.createStaticCollider(position, rotation);
+    this._physxCollider = LitePhysicsDebug._physxPhysicsDebug.createStaticCollider(position, rotation);
 
     this._transform.setPosition(position.x, position.y, position.z);
     this._transform.setRotationQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);

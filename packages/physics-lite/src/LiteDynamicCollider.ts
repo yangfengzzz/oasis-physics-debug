@@ -1,7 +1,7 @@
 import { LiteCollider } from "./LiteCollider";
 import { IDynamicCollider } from "@oasis-engine/design";
 import { Quaternion, Vector3 } from "oasis-engine";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "./LitePhysicsDebug";
 
 /**
  * A dynamic collider can act with self-defined movement or physical force
@@ -21,7 +21,7 @@ export class LiteDynamicCollider extends LiteCollider implements IDynamicCollide
    */
   constructor(position: Vector3, rotation: Quaternion) {
     super();
-    this._physxCollider = PhysXPhysicsDebug.createStaticCollider(position, rotation);
+    this._physxCollider = LitePhysicsDebug._physxPhysicsDebug.createStaticCollider(position, rotation);
 
     this._transform.setPosition(position.x, position.y, position.z);
     this._transform.setRotationQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);

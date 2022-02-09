@@ -17,16 +17,19 @@ import { LiteBoxColliderShape } from "./shape/LiteBoxColliderShape";
 import { LitePhysicsManager } from "./LitePhysicsManager";
 import { LiteSphereColliderShape } from "./shape/LiteSphereColliderShape";
 import { LiteDynamicCollider } from "./LiteDynamicCollider";
-import { PhysXPhysicsDebug, PhysXRuntimeMode } from "@yangfengzzz/physics-physx-debug/src";
+import { PhysXPhysicsDebug, PhysXRuntimeMode } from "@yangfengzzz/physics-physx-debug";
 
 @StaticInterfaceImplement<IPhysics>()
 export class LitePhysicsDebug {
+  static _physxPhysicsDebug: IPhysics;
+
   /**
    * Initialize PhysXPhysics.
    * @param runtimeMode - Runtime mode
    * @returns Promise object
    */
   static init(runtimeMode: PhysXRuntimeMode = PhysXRuntimeMode.Auto): Promise<void> {
+    this._physxPhysicsDebug = PhysXPhysicsDebug;
     return PhysXPhysicsDebug.init(runtimeMode);
   }
 

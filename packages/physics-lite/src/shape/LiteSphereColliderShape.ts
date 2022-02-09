@@ -3,7 +3,7 @@ import { LiteColliderShape } from "./LiteColliderShape";
 import { BoundingSphere, Ray, Vector3 } from "oasis-engine";
 import { LiteHitResult } from "../LiteHitResult";
 import { LitePhysicsMaterial } from "../LitePhysicsMaterial";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "../LitePhysicsDebug";
 
 /**
  * Sphere collider shape in Lite.
@@ -29,7 +29,11 @@ export class LiteSphereColliderShape extends LiteColliderShape implements ISpher
     this._radius = radius;
     this._id = uniqueID;
 
-    this._physxColliderShape = PhysXPhysicsDebug.createSphereColliderShape(uniqueID, radius, material._physxMaterial);
+    this._physxColliderShape = LitePhysicsDebug._physxPhysicsDebug.createSphereColliderShape(
+      uniqueID,
+      radius,
+      material._physxMaterial
+    );
   }
 
   /**
@@ -46,7 +50,7 @@ export class LiteSphereColliderShape extends LiteColliderShape implements ISpher
    */
   setWorldScale(scale: Vector3): void {
     this._physxColliderShape.setWorldScale(scale);
-    
+
     this._maxScale = Math.max(scale.x, Math.max(scale.x, scale.y));
   }
 

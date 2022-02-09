@@ -3,7 +3,7 @@ import { BoundingBox, Ray, Vector3 } from "oasis-engine";
 import { LiteColliderShape } from "./LiteColliderShape";
 import { LiteHitResult } from "../LiteHitResult";
 import { LitePhysicsMaterial } from "../LitePhysicsMaterial";
-import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
+import { LitePhysicsDebug } from "../LitePhysicsDebug";
 
 /**
  * Box collider shape in Lite.
@@ -29,7 +29,11 @@ export class LiteBoxColliderShape extends LiteColliderShape implements IBoxColli
     this._halfSize.setValue(size.x * 0.5, size.y * 0.5, size.z * 0.5);
     this._setBondingBox();
 
-    this._physxColliderShape = PhysXPhysicsDebug.createBoxColliderShape(uniqueID, size, material._physxMaterial);
+    this._physxColliderShape = LitePhysicsDebug._physxPhysicsDebug.createBoxColliderShape(
+      uniqueID,
+      size,
+      material._physxMaterial
+    );
   }
 
   /**
