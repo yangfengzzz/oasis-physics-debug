@@ -1,6 +1,6 @@
 {
   "name": "@yangfengzzz/physics-physx-debug",
-  "version": "0.6.15",
+  "version": "0.6.16",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/module.js",

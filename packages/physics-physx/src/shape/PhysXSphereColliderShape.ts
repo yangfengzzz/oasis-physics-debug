@@ -53,7 +53,7 @@ export class PhysXSphereColliderShape extends PhysXColliderShape implements ISph
   setWorldScale(scale: Vector3): void {
     // scale offset
     const position = this._position;
-    PhysXColliderShape.transform.translation.setValue(
+    position.setValue(
       (position.x * scale.x) / this._scale.x,
       (position.y * scale.y) / this._scale.y,
       (position.z * scale.z) / this._scale.z
