@@ -8,6 +8,8 @@ import { LiteTransform } from "./LiteTransform";
  * Abstract class of physical collider.
  */
 export abstract class LiteCollider implements ICollider {
+  _physxCollider: ICollider;
+
   /** @internal */
   _shapes: LiteColliderShape[] = [];
   /** @internal */
@@ -21,6 +23,8 @@ export abstract class LiteCollider implements ICollider {
    * {@inheritDoc ICollider.addShape }
    */
   addShape(shape: LiteColliderShape): void {
+    this._physxCollider.addShape(shape._physxColliderShape);
+
     const oldCollider = shape._collider;
     if (oldCollider !== this) {
       if (oldCollider) {
@@ -35,6 +39,8 @@ export abstract class LiteCollider implements ICollider {
    * {@inheritDoc ICollider.removeShape }
    */
   removeShape(shape: LiteColliderShape): void {
+    this._physxCollider.removeShape(shape._physxColliderShape);
+
     const index = this._shapes.indexOf(shape);
     if (index !== -1) {
       this._shapes.splice(index, 1);
@@ -46,6 +52,8 @@ export abstract class LiteCollider implements ICollider {
    * {@inheritDoc ICollider.setWorldTransform }
    */
   setWorldTransform(position: Vector3, rotation: Quaternion): void {
+    this._physxCollider.setWorldTransform(position, rotation);
+
     this._transform.setPosition(position.x, position.y, position.z);
     this._transform.setRotationQuaternion(rotation.x, rotation.y, rotation.z, rotation.w);
   }
@@ -54,6 +62,8 @@ export abstract class LiteCollider implements ICollider {
    * {@inheritDoc ICollider.getWorldTransform }
    */
   getWorldTransform(outPosition: Vector3, outRotation: Quaternion): void {
+    this._physxCollider.getWorldTransform(outPosition, outRotation);
+
     const { position, rotationQuaternion } = this._transform;
     outPosition.setValue(position.x, position.y, position.z);
     outRotation.setValue(rotationQuaternion.x, rotationQuaternion.y, rotationQuaternion.z, rotationQuaternion.w);

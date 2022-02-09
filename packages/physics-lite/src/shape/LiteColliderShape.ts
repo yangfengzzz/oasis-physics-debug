@@ -4,11 +4,14 @@ import { LiteHitResult } from "../LiteHitResult";
 import { LiteTransform } from "../LiteTransform";
 import { LiteCollider } from "../LiteCollider";
 import { LiteUpdateFlag } from "../LiteUpdateFlag";
+import { LitePhysicsMaterial } from "../LitePhysicsMaterial";
 
 /**
  * Abstract class for collider shapes.
  */
 export abstract class LiteColliderShape implements IColliderShape {
+  _physxColliderShape: IColliderShape;
+
   private static _ray = new Ray();
   private static _tempPoint = new Vector3();
 
@@ -32,6 +35,8 @@ export abstract class LiteColliderShape implements IColliderShape {
    * {@inheritDoc IColliderShape.setPosition }
    */
   setPosition(position: Vector3): void {
+    this._physxColliderShape.setPosition(position);
+
     this._transform.setPosition(position.x, position.y, position.z);
   }
 
@@ -44,6 +49,8 @@ export abstract class LiteColliderShape implements IColliderShape {
    * {@inheritDoc IColliderShape.setMaterial }
    */
   setMaterial(material: IPhysicsMaterial): void {
+    this._physxColliderShape.setMaterial((<LitePhysicsMaterial>material)._physxMaterial);
+
     throw "Physics-lite don't support setMaterial. Use Physics-PhysX instead!";
   }
 
@@ -51,6 +58,8 @@ export abstract class LiteColliderShape implements IColliderShape {
    * {@inheritDoc IColliderShape.setUniqueID }
    */
   setUniqueID(id: number): void {
+    this._physxColliderShape.setUniqueID(id);
+
     this._id = id;
   }
 

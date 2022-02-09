@@ -6,11 +6,14 @@ import { LiteBoxColliderShape } from "./shape/LiteBoxColliderShape";
 import { LiteSphereColliderShape } from "./shape/LiteSphereColliderShape";
 import { LiteColliderShape } from "./shape/LiteColliderShape";
 import { DisorderedArray } from "./DisorderedArray";
+import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
 
 /**
  * A manager is a collection of bodies and constraints which can interact.
  */
 export class LitePhysicsManager implements IPhysicsManager {
+  private _physxPhysicsManager: IPhysicsManager;
+
   private static _tempSphere: BoundingSphere = new BoundingSphere();
   private static _tempBox: BoundingBox = new BoundingBox();
   private static _currentHit: LiteHitResult = new LiteHitResult();
@@ -45,6 +48,15 @@ export class LitePhysicsManager implements IPhysicsManager {
     this._onTriggerEnter = onTriggerEnter;
     this._onTriggerExit = onTriggerExit;
     this._onTriggerStay = onTriggerStay;
+
+    this._physxPhysicsManager = PhysXPhysicsDebug.createPhysicsManager(
+      onContactEnter,
+      onContactExit,
+      onContactStay,
+      onTriggerEnter,
+      onTriggerExit,
+      onTriggerStay
+    );
   }
 
   /**
@@ -58,6 +70,7 @@ export class LitePhysicsManager implements IPhysicsManager {
    * {@inheritDoc IPhysicsManager.addColliderShape }
    */
   addColliderShape(colliderShape: LiteColliderShape): void {
+    this._physxPhysicsManager.addColliderShape(colliderShape._physxColliderShape);
     this._eventMap[colliderShape._id] = {};
   }
 
@@ -65,6 +78,7 @@ export class LitePhysicsManager implements IPhysicsManager {
    * {@inheritDoc IPhysicsManager.removeColliderShape }
    */
   removeColliderShape(colliderShape: LiteColliderShape): void {
+    this._physxPhysicsManager.removeColliderShape(colliderShape._physxColliderShape);
     delete this._eventMap[colliderShape._id];
   }
 
@@ -72,6 +86,7 @@ export class LitePhysicsManager implements IPhysicsManager {
    * {@inheritDoc IPhysicsManager.addCollider }
    */
   addCollider(actor: LiteCollider): void {
+    this._physxPhysicsManager.addCollider(actor._physxCollider);
     this._colliders.push(actor);
   }
 
@@ -79,6 +94,7 @@ export class LitePhysicsManager implements IPhysicsManager {
    * {@inheritDoc IPhysicsManager.removeCollider }
    */
   removeCollider(collider: LiteCollider): void {
+    this._physxPhysicsManager.removeCollider(collider._physxCollider);
     const index = this._colliders.indexOf(collider);
     if (index !== -1) {
       this._colliders.splice(index, 1);
@@ -237,7 +253,7 @@ export class LitePhysicsManager implements IPhysicsManager {
 
   private _fireEvent(): void {
     const { _eventPool: eventPool, _currentEvents: currentEvents } = this;
-    for (let i = 0, n = currentEvents.length; i < n; ) {
+    for (let i = 0, n = currentEvents.length; i < n;) {
       const event = currentEvents.get(i);
       if (!event.needUpdate) {
         if (event.state == TriggerEventState.Enter) {

@@ -3,6 +3,7 @@ import { BoundingBox, Ray, Vector3 } from "oasis-engine";
 import { LiteColliderShape } from "./LiteColliderShape";
 import { LiteHitResult } from "../LiteHitResult";
 import { LitePhysicsMaterial } from "../LitePhysicsMaterial";
+import { PhysXPhysicsDebug } from "@yangfengzzz/physics-physx-debug";
 
 /**
  * Box collider shape in Lite.
@@ -27,12 +28,16 @@ export class LiteBoxColliderShape extends LiteColliderShape implements IBoxColli
     this._id = uniqueID;
     this._halfSize.setValue(size.x * 0.5, size.y * 0.5, size.z * 0.5);
     this._setBondingBox();
+
+    this._physxColliderShape = PhysXPhysicsDebug.createBoxColliderShape(uniqueID, size, material._physxMaterial);
   }
 
   /**
    * {@inheritDoc IColliderShape.setPosition }
    */
   setPosition(position: Vector3): void {
+    this._physxColliderShape.setPosition(position);
+
     super.setPosition(position);
     this._setBondingBox();
   }
@@ -41,6 +46,8 @@ export class LiteBoxColliderShape extends LiteColliderShape implements IBoxColli
    * {@inheritDoc IColliderShape.setWorldScale }
    */
   setWorldScale(scale: Vector3): void {
+    this._physxColliderShape.setWorldScale(scale);
+
     this._transform.setScale(scale.x, scale.y, scale.z);
   }
 
@@ -48,6 +55,8 @@ export class LiteBoxColliderShape extends LiteColliderShape implements IBoxColli
    * {@inheritDoc IBoxColliderShape.setSize }
    */
   setSize(value: Vector3): void {
+    (<IBoxColliderShape>this._physxColliderShape).setSize(value);
+
     this._halfSize.setValue(value.x * 0.5, value.y * 0.5, value.z * 0.5);
     this._setBondingBox();
   }

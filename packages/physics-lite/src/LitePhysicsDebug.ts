@@ -10,16 +10,30 @@ import {
   IPlaneColliderShape
 } from "@oasis-engine/design";
 import { StaticInterfaceImplement } from "./StaticInterfaceImplement";
-import { Quaternion, Vector3 } from "oasis-engine";
+import { Quaternion, Vector3, WebGLEngine } from "oasis-engine";
 import { LiteStaticCollider } from "./LiteStaticCollider";
 import { LitePhysicsMaterial } from "./LitePhysicsMaterial";
 import { LiteBoxColliderShape } from "./shape/LiteBoxColliderShape";
 import { LitePhysicsManager } from "./LitePhysicsManager";
 import { LiteSphereColliderShape } from "./shape/LiteSphereColliderShape";
 import { LiteDynamicCollider } from "./LiteDynamicCollider";
+import { PhysXPhysicsDebug, PhysXRuntimeMode } from "@yangfengzzz/physics-physx-debug/src";
 
 @StaticInterfaceImplement<IPhysics>()
 export class LitePhysicsDebug {
+  /**
+   * Initialize PhysXPhysics.
+   * @param runtimeMode - Runtime mode
+   * @returns Promise object
+   */
+  static init(runtimeMode: PhysXRuntimeMode = PhysXRuntimeMode.Auto): Promise<void> {
+    return PhysXPhysicsDebug.init(runtimeMode);
+  }
+
+  static setEngine(engine: WebGLEngine) {
+    PhysXPhysicsDebug.setEngine(engine);
+  }
+
   /**
    * {@inheritDoc IPhysics.createPhysicsManager }
    */
